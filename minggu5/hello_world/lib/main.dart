@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hello_world/basic_widgets/image_widget.dart';
+import 'package:hello_world/basic_widgets/scaffold_widget.dart';
 import 'package:hello_world/basic_widgets/text_widget.dart';
 import 'package:hello_world/basic_widgets/loading_cupertino.dart';
 import 'package:hello_world/basic_widgets/fab_widget.dart';
@@ -37,7 +38,8 @@ class MyApp extends StatelessWidget {
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
       // home: const MyLoadingCupertino(),
-      home: const MyFabWidget(),
+      // home: const MyFabWidget(),
+      home: const MyScaffoldWidget(title: 'Flutter Scaffold Example'),
     );
   }
 }

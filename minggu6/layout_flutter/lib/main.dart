@@ -49,11 +49,20 @@ class MyApp extends StatelessWidget {
       ],
     );
 
+    Widget textSection = Container(
+      padding: const EdgeInsets.all(32),
+      child: const Text(
+        'Kota Batu, yang terletak di Jawa Timur, dikenal sebagai kota wisata pegunungan dengan udara sejuk dan panorama alam yang indah. Dikelilingi oleh deretan gunung, kawasan ini menjadi destinasi favorit bagi wisatawan yang menyukai petualangan alam, pendakian, dan panorama pegunungan. Beberapa gunung di Batu juga memiliki nilai sejarah, keunikan geologi, serta daya tarik wisata yang memikat.'
+        '\n Muhamad Syaifullah 2341720013',
+        softWrap: true,
+      ),
+    );
+
     return MaterialApp(
       title: 'Flutter layout: Muhamad Syaifullah dan 2341720013',
       home: Scaffold(
         appBar: AppBar(title: const Text('Muhamad Syaifullah - 2341720013')),
-        body: Column(children: [titleSection, buttonSection]),
+        body: Column(children: [titleSection, buttonSection, textSection]),
       ),
     );
   }

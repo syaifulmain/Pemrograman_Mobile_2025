@@ -6,7 +6,7 @@
 
 #### Langkah 1: Buat Project Baru
 Buatlah sebuah project flutter baru dengan nama kamera_flutter, lalu sesuaikan style laporan praktikum yang Anda buat.
-![[Pasted image 20251026155805.png]]
+![](./ss/Pasted%20image%2020251026155805.png)
 #### Langkah 2: Tambah dependensi yang diperlukan
 Anda memerlukan tiga dependensi pada project flutter untuk menyelesaikan praktikum ini.
 
@@ -219,13 +219,13 @@ try {
 ```
 
 #### Output
-![[Pasted image 20251026163905.png]]
-![[Pasted image 20251026163927.png]]
+![](./ss/Pasted%20image%2020251026163905.png)
+![](./ss/Pasted%20image%2020251026163927.png)
 
 ### Praktikum 2: Membuat photo filter carousel
 #### Langkah 1: Buat project baru
 Buatlah project flutter baru di pertemuan 09 dengan nama `photo_filter_carousel`
-![[Pasted image 20251026164326.png]]
+![](./ss/Pasted%20image%2020251026164326.png)
 #### Langkah 2: Buat widget Selector ring dan dark gradient
 Buatlah folder `widget` dan file baru yang berisi kode berikut.
 
@@ -562,10 +562,13 @@ void main() {
 }
 ```
 #### Output
-![[2025-10-2616-57-07-ezgif.com-video-to-gif-converter.gif]]
+![](./ss/2025-10-2616-57-07-ezgif.com-video-to-gif-converter.gif)
 ## 2. Gabungkan hasil praktikum 1 dengan hasil praktikum 2 sehingga setelah melakukan pengambilan foto, dapat dibuat filter carouselnya!
-![[2025-10-2617-22-43-ezgif.com-optimize.gif]]
+![](./ss/2025-10-2617-22-43-ezgif.com-optimize.gif)
 ## 3. Jelaskan maksud void async pada praktikum 1?
+void async adalah cara untuk menjalankan fungsi main secara asinkron, yang memungkinkan Anda menunggu operasi yang memakan waktu (seperti inisialisasi kamera) selesai sebelum aplikasi berjalan.
 ## 4. Jelaskan fungsi dari anotasi @immutable dan @override ?
+* @immutable: Anotasi ini menandakan bahwa sebuah class dan semua subclass-nya tidak dapat diubah (immutable). Artinya, semua properti/variabel di dalam class tersebut harus final, dan setelah objek dari class itu dibuat, nilainya tidak bisa diubah lagi. Ini sangat umum digunakan pada Widget di Flutter untuk optimasi performa, karena jika state sebuah widget tidak berubah, Flutter tidak perlu membangunnya kembali.
+* @override: Anotasi ini digunakan pada sebuah method di dalam subclass untuk menandakan bahwa method tersebut sengaja menimpa (mengganti implementasi) method dengan nama yang sama dari superclass (class induknya). Ini membantu mencegah kesalahan; jika Anda salah mengeja nama method atau jika method di superclass berubah nama atau dihapus, compiler akan memberikan error.
 ## 5. Kumpulkan link commit repository GitHub Anda kepada dosen yang telah disepakatist!
 

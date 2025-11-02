@@ -1,4 +1,4 @@
-# Tugas Praktikum 1
+# Tugas Praktikum 1: Dasar State dengan Model-View
 
 ## 1. Selesaikan langkah-langkah praktikum tersebut, lalu dokumentasikan berupa GIF hasil akhir praktikum beserta penjelasannya di file README.md! Jika Anda menemukan ada yang error atau tidak berjalan dengan baik, silakan diperbaiki.
 ### Langkah 1: Buat Project Baru
@@ -187,6 +187,158 @@ void dispose() {
 ## 6. Kumpulkan laporan praktikum Anda berupa link commit atau repository GitHub ke dosen yang telah disepakati !
 
 
-# Tugas Praktikum 2
+# Tugas Praktikum 2: InheritedWidget
+## 1. Selesaikan langkah-langkah praktikum tersebut, lalu dokumentasikan berupa GIF hasil akhir praktikum beserta penjelasannya di file `README.md`! Jika Anda menemukan ada yang error atau tidak berjalan dengan baik, silakan diperbaiki sesuai dengan tujuan aplikasi tersebut dibuat.
+### Langkah 1: Buat file **`plan_provider.dart`**
+```dart
+import 'package:flutter/material.dart';  
+import '../models/data_layer.dart';  
+  
+class PlanProvider extends InheritedNotifier<ValueNotifier<Plan>> {  
+  const PlanProvider({  
+    super.key,  
+    required Widget child,  
+    required ValueNotifier<Plan> notifier,  
+  }) : super(child: child, notifier: notifier);  
+  
+  static ValueNotifier<Plan> of(BuildContext context) {  
+    return context  
+        .dependOnInheritedWidgetOfExactType<PlanProvider>()!  
+        .notifier!;  
+  }  
+}
+```
+### Langkah 2: Edit **`main.dart`**
+```dart
+@override  
+Widget build(BuildContext context) {  
+  return MaterialApp(  
+    theme: ThemeData(primarySwatch: Colors.purple),  
+    home: PlanProvider(  
+      notifier: ValueNotifier<Plan>(const Plan()),  
+      child: const PlanScreen(),  
+    ),  
+  );  
+}
+```
+### Langkah 3: Tambah method pada model **`plan.dart`**
+```dart
+class Plan {  
+  final String name;  
+  final List<Task> tasks;  
+  
+  int get completedCount => tasks.where((task) => task.complete).length;  
+  
+  String get completenessMessage =>  
+      '$completedCount out of ${tasks.length} tasks';  
+  
+  const Plan({this.name = '', this.tasks = const []});  
+}
+```
+### **Langkah 4: Pindah ke PlanScreen**
+* Edit `PlanScreen` agar menggunakan data dari `PlanProvider`. Hapus deklarasi variabel `plan` (ini akan membuat error). Kita akan perbaiki pada langkah 5 berikut ini.
+### Langkah 5: Edit method **`_buildAddTaskButton`**
+```dart
+Widget _buildAddTaskButton(BuildContext context) {  
+  ValueNotifier<Plan> planNotifier = PlanProvider.of(context);  
+  return FloatingActionButton(  
+    child: const Icon(Icons.add),  
+    onPressed: () {  
+      Plan currentPlan = planNotifier.value;  
+      planNotifier.value = Plan(  
+        name: currentPlan.name,  
+        tasks: List<Task>.from(currentPlan.tasks)..add(const Task()),  
+      );  
+    },  
+  );  
+}
+```
+### Langkah 6: Edit method **`_buildTaskTile`**
+```dart
+Widget _buildTaskTile(Task task, int index, BuildContext context) {  
+  ValueNotifier<Plan> planNotifier = PlanProvider.of(context);  
+  return ListTile(  
+    leading: Checkbox(  
+      value: task.complete,  
+      onChanged: (selected) {  
+        Plan currentPlan = planNotifier.value;  
+        planNotifier.value = Plan(  
+          name: currentPlan.name,  
+          tasks: List<Task>.from(currentPlan.tasks)  
+            ..[index] = Task(  
+              description: task.description,  
+              complete: selected ?? false,  
+            ),  
+        );  
+      },  
+    ),  
+    title: TextFormField(  
+      initialValue: task.description,  
+      onChanged: (text) {  
+        Plan currentPlan = planNotifier.value;  
+        planNotifier.value = Plan(  
+          name: currentPlan.name,  
+          tasks: List<Task>.from(currentPlan.tasks)  
+            ..[index] = Task(description: text, complete: task.complete),  
+        );  
+      },  
+    ),  
+  );  
+}
+```
+### Langkah 7: Edit **`_buildList`**
+```dart
+Widget _buildList(Plan plan) {  
+  return ListView.builder(  
+    controller: scrollController,  
+    itemCount: plan.tasks.length,  
+    itemBuilder: (context, index) =>  
+        _buildTaskTile(plan.tasks[index], index, context),  
+  );  
+}
+```
+### Langkah 8: Tetap di **`class PlanScreen`**
+### Langkah 9: Tambah widget **`SafeArea`**
+```dart
+@override  
+Widget build(BuildContext context) {  
+  return Scaffold(  
+    appBar: AppBar(title: const Text('Master Plan Muhamad Syaifullah')),  
+    body: ValueListenableBuilder<Plan>(  
+      valueListenable: PlanProvider.of(context),  
+      builder: (context, plan, child) {  
+        return Column(  
+          children: [  
+            Expanded(child: _buildList(plan)),  
+            SafeArea(child: Text(plan.completenessMessage)),  
+          ],  
+        );  
+      },  
+    ),  
+    floatingActionButton: _buildAddTaskButton(context),  
+  );  
+}
+```
+## 2. Jelaskan mana yang dimaksud `InheritedWidget` pada langkah 1 tersebut! Mengapa yang digunakan `InheritedNotifier`?
+1. `InheritedWidget`: Untuk menyebarkan (`provide`) data ke seluruh pohon widget di bawahnya.
+2. `ValueNotifier`: Untuk menyimpan data (`Plan`) dan memberi tahu "siapa pun yang mendengarkan" ketika data tersebut berubah.
+Dengan menggabungkan keduanya, `PlanProvider` menjadi cara yang efisien untuk tidak hanya menyediakan akses ke data `Plan`, tetapi juga secara otomatis memperbarui UI di mana pun data itu digunakan setiap kali ada perubahan. Ini adalah bentuk sederhana dari state management reaktif di Flutter.
+## 3. Jelaskan maksud dari method di langkah 3 pada praktikum tersebut! Mengapa dilakukan demikian?
+1. `.int get completedCount`:
+	* Maksud: `Getter` ini secara dinamis menghitung dan mengembalikan jumlah tugas yang telah ditandai selesai (`complete = true`) dari dalam daftar tasks.
+	* Cara Kerja: Ia menyaring daftar tasks untuk hanya menyertakan tugas yang sudah selesai, lalu menghitung panjang dari hasil saringan tersebut.
+2. `String get completenessMessage`:
+	* Maksud: `Getter` ini membuat sebuah pesan ringkasan dalam format `String` yang menunjukkan progres penyelesaian tugas, contohnya "3 out of 5 tasks".
+	* Cara Kerja: Ia menggunakan nilai dari `completedCount` dan jumlah total `tasks` untuk membangun sebuah kalimat yang mudah dibaca.
+## 4. Lakukan capture hasil dari Langkah 9 berupa GIF, kemudian jelaskan apa yang telah Anda buat!
+![](./image/2025-11-0218-49-10-ezgif.com-video-to-gif-converter.gif)
+## 5. Kumpulkan laporan praktikum Anda berupa link commit atau repository GitHub ke dosen yang telah disepakati !
 
-# Tugas Praktikum 3
+# Tugas Praktikum 3: State di Multiple Screens
+## 1. Selesaikan langkah-langkah praktikum tersebut, lalu dokumentasikan berupa GIF hasil akhir praktikum beserta penjelasannya di file `README.md`! Jika Anda menemukan ada yang error atau tidak berjalan dengan baik, silakan diperbaiki sesuai dengan tujuan aplikasi tersebut dibuat.
+## 2. Berdasarkan Praktikum 3 yang telah Anda lakukan, jelaskan maksud dari gambar diagram berikut ini!
+
+![](https://jti-polinema.github.io/flutter-codelab/10-basic-state/img//9ce81bcd2817adc8.png)
+
+## 3. Lakukan capture hasil dari Langkah 14 berupa GIF, kemudian jelaskan apa yang telah Anda buat!
+## 4. Kumpulkan laporan praktikum Anda berupa link commit atau repository GitHub ke dosen yang telah disepakati !

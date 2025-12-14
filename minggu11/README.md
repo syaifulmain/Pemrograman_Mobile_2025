@@ -246,13 +246,60 @@ ElevatedButton(
 
 ## Praktikum 4: Memanggil Future secara paralel
 ### Langkah 1: Buka file `main.dart`
+```dart
+void returnFG(){
+  FutureGroup<int> futureGroup = FutureGroup<int>();
+  futureGroup.add(returnOneAsync());
+  futureGroup.add(returnTwoAsync());
+  futureGroup.add(returnThreeAsync());
+  futureGroup.close();
+  futureGroup.future.then((List<int> value) {
+    int total = 0;
+    for (var element in value){
+      total += element;
+    }
+    setState(() {
+      result = total.toString();
+    });
+  });
+}
+```
 
 ### Langkah 2: Edit `onPressed()`
+```dart
+onPressed: () {
+    returnFG();
+}
+```
 
 ### Langkah 3: Run
+> **Soal 7**
+>
+> - Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan "W11: Soal 7".
+
+![alt text](./images/p4m11.gif)
 
 ### Langkah 4: Ganti variabel `futureGroup`
-
+```dart
+final futures = Future.wait<int>([
+  returnOneAsync(),
+  returnTwoAsync(),
+  returnThreeAsync(),
+]);
+futures.then((List<int> value) {
+  int total = 0;
+  for (var element in value) {
+    total += element;
+  }
+  setState(() {
+    result = total.toString();
+  });
+});
+```
+> Soal 8
+>
+> - Jelaskan maksud perbedaan kode langkah 1 dan 4!
+>   - implementasi future secara pararel untuk menghemat waktu
 
 ## Praktikum 5: Menangani Respon Error pada Async Code
 ### Langkah 1: Buka file `main.dart`

@@ -357,34 +357,103 @@ keyImageUrl: imageUrl,
 
 # Praktikum 4: SharedPreferences
 ### Langkah 1: Tambahkan Dependensi
+```bash
+flutter pub add shared_preferences
+```
 
 ### Langkah 2: Install Dependensi
 
 ### Langkah 3: Lakukan Import
+```dart
+import 'package:shared_preferences/shared_preferences.dart';
+```
 
 ### Langkah 4: Tambahkan Variabel appCounter
+```dart
+int appCounter = 0;
+```
 
 ### **Langkah 5: Buat Method readAndWritePreference**
+```dart
+Future<void> readAndWritePreference() async {}
+```
 
 ### Langkah 6: Dapatkan Instance SharedPreferences
+```dart
+SharedPreferences prefs = await SharedPreferences.getInstance();
+```
 
 ### Langkah 7: Baca, Cek Null, dan Increment Counter
+```dart
+appCounter = prefs.getInt('appCounter') ?? 0;
+appCounter++;
+```
 
 ### Langkah 8: Simpan Nilai Baru
+```dart
+await prefs.setInt('appCounter', appCounter);
+```
 
 ### **Langkah 9: Perbarui State**
+```dart
+setState(() {
+    appCounter = appCounter;
+});
+}
+```
 
 ### Langkah 10: Panggil di initState()
+```dart
+  void initState() {
+    super.initState();
+    readAndWritePreference();
+  }
+```
 
 ### **Langkah 11: Perbarui Tampilan (body)**
+```dart
+body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text('You have opened the app $appCounter times.'),
+            ElevatedButton(
+              onPressed: () {},
+              child: const Text('Reset Counter'),
+            ),
+          ],
+        ),
+      ),
+```
 
 ### **Langkah 12: Run**
+![](./images/m13p4.png)
 
 ### **Langkah 13: Buat Method deletePreference()**
+```dart
+Future<void> deletePreference() async {
+SharedPreferences prefs = await SharedPreferences.getInstance();
+await prefs.clear();
+setState(() {
+    appCounter = 0;
+});
+}
+```
 
 ### **Langkah 14: Panggil deletePreference()**
+```dart
+onPressed: () {
+deletePreference();
+},
+```
 
 ### **Langkah 15: Run**
+>Soal 6
+>
+> - Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
+> - Lalu lakukan commit dengan pesan "W13: Jawaban Soal 6".
+
+![](./images/m13p42.png)
 
 
 # Praktikum 5: Akses filesystem dengan path_provider

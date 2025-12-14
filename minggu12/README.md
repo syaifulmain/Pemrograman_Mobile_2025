@@ -352,24 +352,87 @@ stream.transform(transformer).listen((event) {
 
 # Praktikum 4: Subscribe ke stream events
 ### Langkah 1: Tambah variabel
+```dart
+late StreamSubscription subscription;
+```
 
 ### Langkah 2: Edit **`initState()`**
+```dart
+subscription = stream.transform(transformer).listen((event) {
+  setState(() {
+    lastNumber = event;
+  });
+});
+```
 
 ### Langkah 3: Tetap di **`initState()`**
+```dart
+subscription.onError((error) {
+  setState(() {
+    lastNumber = -1;
+  });
+});
+```
 
 ### Langkah 4: Tambah properti onDone()
+```dart
+subscription.onDone(() {
+  print('OnDone was called');
+});
+```
 
 ### **Langkah 5: Tambah method baru**
+```dart
+void stopStream() {
+  numberStreamController.close();
+}
+```
 
 ### Langkah 6: Pindah ke method **`dispose()`**
+```dart
+@override
+void dispose() {
+  subscription.cancel();
+  super.dispose();
+}
+```
 
 ### Langkah 7: Pindah ke method **`build()`**
+```dart
+ElevatedButton(
+  onPressed: () => stopStream(),
+  child: const Text('Stop Subscription'),
+),
+```
 
 ### Langkah 8: Edit method **`addRandomNumber()`**
+```dart
+void addRandomNumber() {
+  Random random = Random();
+  int myNum = random.nextInt(10);
+  if (!numberStreamController.isClosed) {
+    numberStream.addNumberToSink(myNum);
+  } else {
+    setState(() {
+      lastNumber = -1;
+    });
+  }
+}
+```
 
 ### **Langkah 9: Run**
 
 ### Langkah 10: Tekan button ‘Stop Subscription'
+> Soal 9
+>
+> - Jelaskan maksud kode langkah 2, 6 dan 8 tersebut!
+>   - Hasil proses transformasi dan langganan stream disimpan ke dalam variabel `subscription` dengan tipe `StreamSubscription`.
+>   - Pemanggilan `subscription.cancel()` guna memutus langganan terhadap stream saat widget `dispose()`.
+>   - Menambah pengecekan.
+> - Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
+> - Lalu lakukan commit dengan pesan "W12: Jawaban Soal 9".
+
+![alt text](./images/m12p4.gif)
 
 
 # Praktikum 5: Multiple stream subscriptions

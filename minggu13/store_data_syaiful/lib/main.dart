@@ -11,9 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'JSON - Syaiful',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue),
       home: const MyHomePage(),
     );
   }
@@ -27,13 +25,29 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String pizzaString = '';
+
+  Future readJsonFile() async {
+    String myString = await DefaultAssetBundle.of(
+      context,
+    ).loadString('assets/pizzalist.json');
+
+    setState(() {
+      pizzaString = myString;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    readJsonFile();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('JSON - Syaiful'),
-      ),
-      body: Container(),
+      appBar: AppBar(title: const Text('JSON - Syaiful')),
+      body: Text(pizzaString),
     );
   }
 }

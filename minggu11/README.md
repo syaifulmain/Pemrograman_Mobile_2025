@@ -303,13 +303,54 @@ futures.then((List<int> value) {
 
 ## Praktikum 5: Menangani Respon Error pada Async Code
 ### Langkah 1: Buka file `main.dart`
+```dart
+Future returnError() async {
+  await Future.delayed(const Duration(seconds: 2));
+  throw Exception('Something terrible happened!');
+}
+```
 
 ### Langkah 2: ElevatedButton
+```dart
+returnError()
+  .then((value) {
+    setState(() {
+      result = 'Success';
+    });
+  })
+  .catchError((e) {
+    setState(() {
+      result = e.toString();
+    });
+  }).whenComplete(() => print('Operation finished'));
+```
 
 ### Langkah 3: Run
+> **Soal 9**
+>
+> - Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan "W11: Soal 9".
+
+![alt text](./images/p5m11.gif)
 
 ### Langkah 4: Tambah method `handleError()`
+```dart
+Future handleError() async {
+  try {
+    await returnError();
+  } catch (e) {
+    setState(() {
+      result = e.toString();
+    });
+  } finally {
+    print('Operation finished');
+  }
+}
+```
+> Soal 10
+>
+> - Panggil method handleError() tersebut di ElevatedButton, lalu run. Apa hasilnya? Jelaskan perbedaan kode langkah 1 dan 4!
 
+![alt text](./images/p52m11.gif)
 
 ## Praktikum 6: Menggunakan Future dengan StatefulWidget
 ### Langkah 1: install plugin geolocator

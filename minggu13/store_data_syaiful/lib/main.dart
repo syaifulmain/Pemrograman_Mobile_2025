@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:store_data_syaiful/model/pizza.dart';
@@ -81,18 +82,18 @@ class _MyHomePageState extends State<MyHomePage> {
   //   return jsonEncode(pizzas.map((pizza) => pizza.toJson()).toList());
   // }
 
-  // int appCounter = 0;
+  int appCounter = 0;
 
-  // Future<void> readAndWritePreference() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   appCounter = prefs.getInt('appCounter') ?? 0;
-  //   appCounter++;
-  //   await prefs.setInt('appCounter', appCounter);
+  Future<void> readAndWritePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    appCounter = prefs.getInt('appCounter') ?? 0;
+    appCounter++;
+    await prefs.setInt('appCounter', appCounter);
 
-  //   setState(() {
-  //     appCounter = appCounter;
-  //   });
-  // }
+    setState(() {
+      appCounter = appCounter;
+    });
+  }
 
   // Future<void> deletePreference() async {
   //   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -120,10 +121,44 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   getPaths();
+  // }
+
+  late File myFile;
+  String fileText = '';
+
+  Future<bool> writeFile() async {
+    try {
+      await myFile.writeAsString('Margherita, Capricciosa, Napoli');
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    getPaths();
+    readAndWritePreference();
+    getPaths().then((_) {
+      myFile = File('$documentPath/pizzas.txt');
+      writeFile();
+    });
+  }
+
+  Future<bool> readFile() async {
+    try {
+      String fileContent = await myFile.readAsString();
+      setState(() {
+        fileText = fileContent;
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   @override
@@ -162,10 +197,21 @@ class _MyHomePageState extends State<MyHomePage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          // children: [
+          //   Text('Document Path:\n$documentPath'),
+          //   const Divider(),
+          //   Text('Temporary Path:\n$tempPath'),
+          // ],
           children: [
             Text('Document Path:\n$documentPath'),
             const Divider(),
             Text('Temporary Path:\n$tempPath'),
+            const Divider(),
+            ElevatedButton(
+              onPressed: () => readFile(),
+              child: const Text('Read File'),
+            ),
+            Text(fileText),
           ],
         ),
       ),

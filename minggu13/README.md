@@ -530,18 +530,87 @@ Widget build(BuildContext context) {
 
 # Praktikum 6: Akses filesystem dengan direktori
 ### **Langkah 1: Lakukan Import dart:io**
+```dart
+import 'dart:io';
+```
 
 ### Langkah 2: Tambahkan Variabel File dan Text
+```dart
+late File myFile;
+String fileText = '';
+```
 
 ### Langkah 3: Buat Method writeFile()
+```dart
+Future<bool> writeFile() async {
+  try {
+    await myFile.writeAsString('Margherita, Capricciosa, Napoli');
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+```
 
 ### **Langkah 4: Inisialisasi File dan Panggil writeFile() di initState()**
+```dart
+  @override
+  void initState() {
+    super.initState();
+    readAndWritePreference();
+    getPaths().then((_) {
+      myFile = File('$documentPath/pizzas.txt');
+      writeFile();
+    });
+  }
+  ```
 
 ### Langkah 5: Buat Method readFile()
+```dart
+  Future<bool> readFile() async {
+    try {
+      String fileContent = await myFile.readAsString();
+      setState(() {
+        fileText = fileContent;
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+  ```
 
 ### Langkah 6: Edit build() dan Tambahkan Tombol Baca
+```dart
+children: [
+Text(
+    'Document Path:\n$documentPath'
+),
+const Divider(),
+Text(
+    'Temporary Path:\n$tempPath',
+),
+const Divider(),
+ElevatedButton(
+    onPressed: () => readFile(),
+    child: const Text('Read File'),
+),
+Text(
+    fileText,
+),
+],
+```
 
 ### Langkah 7: Run
+>Soal 8
+>
+> - Jelaskan maksud kode pada langkah 3 dan 7 !
+>   - `writeFile()` berfungsi untuk menyimpan teks "Margherita, Capricciosa, Napoli".
+>   - Memanggil fungsi `readFile()` untuk membaca data 
+> - Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
+> - Lalu lakukan commit dengan pesan "W13: Jawaban Soal 8".
+
+![alt text](./images/m13p6.png)
 
 
 # Praktikum 7: Menyimpan data dengan enkripsi/dekripsi

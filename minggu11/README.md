@@ -87,8 +87,8 @@ class _FuturePageState extends State<FuturePage> {
 ```
 > **Soal 2**
 >
->Carilah judul buku favorit Anda di Google Books, lalu ganti ID buku pada variabel `path` di kode tersebut. Caranya ambil di URL browser Anda seperti gambar berikut ini.
->https://www.googleapis.com/books/v1/volumes/qBFhEAAAQBAJ
+> - Carilah judul buku favorit Anda di Google Books, lalu ganti ID buku pada variabel `path` di kode tersebut. Caranya ambil di URL browser Anda seperti gambar berikut ini.
+> - https://www.googleapis.com/books/v1/volumes/qBFhEAAAQBAJ
 ### Langkah 5: Tambah kode di `ElevatedButton`
 ```dart
 ElevatedButton(
@@ -110,9 +110,12 @@ ElevatedButton(
 > **Soal 3**
 > 
 > - Jelaskan maksud kode langkah 5 tersebut terkait `substring` dan `catchError`!
+>   - Hanya mengambil data dari 0 sampai 450.
+>   - Menangkap error jika terjadi.
 > - Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan "**W11: Soal 3**".
 
-![[p1m11.gif]]
+![p1m11.gif](./images/p1m11.gif)
+
 ## Praktikum 2: Menggunakan await/async untuk menghindari callbacks
 ### Langkah 1: Buka file `main.dart`
 ```dart
@@ -153,11 +156,13 @@ ElevatedButton(
 ),
 ```
 ### Langkah 4: Run
-![[p2m11.gif]]
 >**Soal 4**
 >
 > - Jelaskan maksud kode langkah 1 dan 2 tersebut!
+>   - Mendemonstrasikan penggunaan await/async yang mana akan menghasilkan nilai 6.
 > - Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan "**W11: Soal 4**".
+
+![p2m11.gif](./images/p2m11.gif)
 
 ## Praktikum 3: Menggunakan Completer di Future
 ### Langkah 1: Buka `main.dart`
@@ -180,12 +185,63 @@ Future calculate() async {
 }
 ```
 ### Langkah 3: Ganti isi kode `onPressed()`
-
+```dart
+ElevatedButton(
+  onPressed: () {
+    getNumber().then((value) {
+      setState(() {
+        result = value.toString();
+      });
+    });
+  },
+  child: const Text('GO!'),
+),
+```
 ### Langkah 4:
+> **Soal 5**
+>
+> - Jelaskan maksud kode langkah 2 tersebut!
+>   - Kode tersebut mendemonstrasikan penggunaan Completer untuk mengontrol completion (penyelesaian) sebuah Future secara manual.
+> - Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan "W11: Soal 5".
+
+![p3m11.gif](./images/p3m11.gif)
 
 ### Langkah 5: Ganti method `calculate()`
+```dart
+Future calculate() async {
+  try {
+    await Future.delayed(const Duration(seconds: 5));
+    completer.complete(42);
+  } catch (_) {
+    completer.completeError({});
+  }
+}
+```
 
 ### Langkah 6: Pindah ke `onPressed()`
+```dart
+ElevatedButton(
+  onPressed: () {
+    getNumber()
+        .then((value) {
+          setState(() {
+            result = value.toString();
+          });
+        })
+        .catchError((e) {
+          result = 'An error occurred';
+        });
+  },
+  child: const Text('GO!'),
+),
+```
+> Soal 6
+>
+> - Jelaskan maksud perbedaan kode langkah 2 dengan langkah 5-6 tersebut!
+>    - Penggunaan try catch jika terjadi error
+> - Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan "W11: Soal 6".
+
+![p32m11.gif](./images/p32m11.gif)
 
 
 ## Praktikum 4: Memanggil Future secara paralel

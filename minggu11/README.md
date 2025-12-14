@@ -634,11 +634,96 @@ home: const NavigationFirst()
 ### Langkah 1: Buat file baru `navigation_dialog.dart`
 
 ### Langkah 2: Isi kode `navigation_dialog.dart`
+``` dart
+import 'package:flutter/material.dart';
+
+class NavigationDialogScreen extends StatefulWidget {
+  const NavigationDialogScreen({super.key});
+
+  @override
+  State<NavigationDialogScreen> createState() => _NavigationDialogScreenState();
+}
+
+class _NavigationDialogScreenState extends State<NavigationDialogScreen> {
+  Color color = Colors.blue;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: color,
+      appBar: AppBar(
+        title: const Text('Syaifullah Navigation Dialog Screen'),
+      ),
+      body: Center(
+        child: ElevatedButton(onPressed: () {}, child: const Text('Change Color')),
+      ),
+    );
+  }
+}
+```
 
 ### Langkah 3: Tambah method async
+```dart
+_showColorDialog(BuildContext context) async {
+    await showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: const Text('Very important question'),
+          content: const Text('Please choose a color'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                color = Colors.red;
+                Navigator.pop(context, color);
+              },
+              child: const Text('Red'),
+            ),
+            TextButton(
+              onPressed: () {
+                color = Colors.green;
+                Navigator.pop(context, color);
+              },
+              child: const Text('Green'),
+            ),
+            TextButton(
+              onPressed: () {
+                color = Colors.blue;
+                Navigator.pop(context, color);
+              },
+              child: const Text('Blue'),
+            ),
+          ],
+        );
+      },
+    );
+    setState(() {});
+  }
+```
 
 ### Langkah 4: Panggil method di `ElevatedButton`
+```dart
+body: Center(
+  child: ElevatedButton(
+    onPressed: () {
+      _showColorDialog(context);
+    },
+    child: const Text('Change Color'),
+  ),
+),
+```
 
 ### Langkah 5: Edit `main.dart`
+```dart
+home: const NavigationDialogScreen()
+```
 
 ### Langkah 6: Run
+>Soal 17
+>
+> - Cobalah klik setiap button, apa yang terjadi ? Mengapa demikian ?
+>   - warna background berubah
+> - Gantilah 3 warna pada langkah 3 dengan warna favorit Anda!
+> - Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan "W11: Soal 17".
+
+![alt text](./images/p9m11.gif)

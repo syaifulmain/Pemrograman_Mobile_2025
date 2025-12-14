@@ -319,13 +319,41 @@ return Pizza(
 
 # Praktikum 3: Menangani error JSON
 ### Langkah 1: Buka `pizza.dart` **dan Buat Konstanta**
+```dart
+const keyId = 'id';
+const keyName = 'pizzaName';
+const keyDescription = 'description';
+const keyPrice = 'price';
+const keyImageUrl = 'imageUrl';
+```
 
 ### Langkah 2: Perbarui fromJson() menggunakan Konstanta
+```dart
+id: int.tryParse(json[keyId].toString()) ?? 0,
+pizzaName: json[keyName] != null ? json[keyName].toString() : 'No name',
+description: json[keyDescription] != null ? json[keyDescription].toString() : '',
+price: double.tryParse(json[keyPrice].toString()) ?? 0.0,
+imageUrl: json[keyImageUrl] != null ? json[keyImageUrl].toString() : '',
+```
 
 ### Langkah 3: Perbarui toJson() menggunakan Konstanta
-
+```dart
+keyId: id,
+keyName: pizzaName,
+keyDescription: description,
+keyPrice: price,
+keyImageUrl: imageUrl,
+```
 ### **Langkah 4: Run**
 
+>Soal 5
+>
+> - Jelaskan maksud kode lebih safe dan maintainable!
+>   - Menghindari kesalahan ketik
+> - Capture hasil praktikum Anda dan lampirkan di README.
+> - Lalu lakukan commit dengan pesan "W13: Jawaban Soal 5".
+
+![alt text](./images/m13p22.png)
 
 # Praktikum 4: SharedPreferences
 ### Langkah 1: Tambahkan Dependensi

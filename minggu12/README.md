@@ -150,34 +150,163 @@ return Scaffold(
 
 # Praktikum 2: Stream controllers dan sinks
 ### Langkah 1: Buka file **`stream.dart`**
+```dart
+import 'dart:async';
+```
 
 ### Langkah 2: Tambah **`class NumberStream`**
+```dart
+class NumberStream {
+}
+```
 
 ### Langkah 3: Tambah **`StreamController`**
+```dart
+final StreamController<int> controller = StreamController<int>();
+```
 
 ### Langkah 4: Tambah method **`addNumberToSink`**
+```dart
+void addNumberToSink(int newNumber) {
+  controller.sink.add(newNumber);
+}
+```
 
 ### Langkah 5: Tambah method **`close()`**
+```dart
+close() {
+  controller.close();
+}
+```
 
 ### **Langkah** 6: Buka **`main.dart`**
+```dart
+import 'dart:async';
+import 'dart:math';
+```
 
 ### **Langkah** **7: Tambah variabel**
+```dart
+int lastNumber = 0;
+late StreamController numberStreamController;
+late NumberStream numberStream;
+```
 
 ### Langkah 8: Edit **`initState()`**
+```dart
+@override
+void initState() {
+  numberStream = NumberStream();
+  numberStreamController = numberStream.controller;
+  Stream stream = numberStreamController.stream;
+  stream.listen((event) {
+    setState(() {
+      lastNumber = event;
+    });
+  });
+  super.initState();
+}
+```
 
 ### **Langkah 9: Edit dispose()**
+```dart
+@override
+void dispose() {
+  numberStreamController.close();
+  super.dispose();
+}
+```
 
 ### Langkah 10: Tambah method **`addRandomNumber()`**
+```dart
+void addRandomNumber() {
+  Random random = Random();
+  int myNum = random.nextInt(10);
+  numberStream.addNumberToSink(myNum);
+}
+```
 
 ### Langkah 11: Edit method **`build()`**
+```dart
+body: SizedBox(
+  width: double.infinity,
+  child: Column(
+    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      Text(lastNumber.toString()),
+      ElevatedButton(
+        onPressed: () => addRandomNumber(),
+        child: const Text('New Random Number'),
+      )
+    ],
+  ),
+),
+```
 
 ### **Langkah 12: Run**
+>Soal 6
+>
+> - Jelaskan maksud kode langkah 8 dan 10 tersebut!
+>   - `initState` membuat objek NumberStream untuk pertama kali
+>   - `addRandomNumber` fungsi mengacak angka
+> - Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
+> - Lalu lakukan commit dengan pesan "W12: Jawaban Soal 6".
+
+![alt text](./images/m12p2.gif)
 
 ### Langkah 13: Buka **`stream.dart`**
+```dart
+addError() {
+  controller.sink.addError('error');
+}
+```
 
 ### **Langkah 14: Buka main.dart**
+```dart
+@override
+void initState() {
+  numberStream = NumberStream();
+  numberStreamController = numberStream.controller;
+  Stream stream = numberStreamController.stream;
+  stream.listen((event) {
+    setState(() {
+      lastNumber = event;
+    });
+  }).onError((error) {
+    setState(() {
+      lastNumber = -1;
+    });
+  });
+  super.initState();
+}
+```
 
 ### **Langkah** 15: Edit method **`addRandomNumber()`**
+```dart
+void addRandomNumber() {
+  Random random = Random();
+  // int myNum = random.nextInt(10);
+  // numberStream.addNumberToSink(myNum);
+  numberStream.addError();
+}
+```
+> Soal 7
+>
+> - Jelaskan maksud kode langkah 13 sampai 15 tersebut!
+>   - handle error
+>   - tes handdle error output -1
+> - Kembalikan kode seperti semula pada Langkah 15, comment addError() agar Anda dapat melanjutkan ke praktikum 3 berikutnya.
+```
+  void addRandomNumber() {
+    Random random = Random();
+    int myNum = random.nextInt(10);
+    numberStream.addNumberToSink(myNum);
+    // numberStream.addError();
+  }
+```
+> - Lalu lakukan commit dengan pesan "W12: Jawaban Soal 7".
+
 
 
 # Praktikum 3: Injeksi data ke streams

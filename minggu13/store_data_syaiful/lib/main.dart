@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:store_data_syaiful/model/pizza.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -80,37 +81,55 @@ class _MyHomePageState extends State<MyHomePage> {
   //   return jsonEncode(pizzas.map((pizza) => pizza.toJson()).toList());
   // }
 
-  int appCounter = 0;
+  // int appCounter = 0;
 
-  Future<void> readAndWritePreference() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    appCounter = prefs.getInt('appCounter') ?? 0;
-    appCounter++;
-    await prefs.setInt('appCounter', appCounter);
+  // Future<void> readAndWritePreference() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   appCounter = prefs.getInt('appCounter') ?? 0;
+  //   appCounter++;
+  //   await prefs.setInt('appCounter', appCounter);
 
+  //   setState(() {
+  //     appCounter = appCounter;
+  //   });
+  // }
+
+  // Future<void> deletePreference() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   await prefs.clear();
+  //   setState(() {
+  //     appCounter = 0;
+  //   });
+  // }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   readAndWritePreference();
+  // }
+
+  String documentPath = '';
+  String tempPath = '';
+
+  Future getPaths() async {
+    final docDir = await getApplicationDocumentsDirectory();
+    final tempDir = await getTemporaryDirectory();
     setState(() {
-      appCounter = appCounter;
-    });
-  }
-
-  Future<void> deletePreference() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
-    setState(() {
-      appCounter = 0;
+      documentPath = docDir.path;
+      tempPath = tempDir.path;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    readAndWritePreference();
+    getPaths();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('JSON - Syaiful')),
+      // appBar: AppBar(title: const Text('JSON - Syaiful')),
       // body: ListView.builder(
       //   itemCount: myPizzas.length,
       //   itemBuilder: (context, index) {
@@ -124,17 +143,29 @@ class _MyHomePageState extends State<MyHomePage> {
       //     );
       //   },
       // ),
-      body: Center(
+      // body: Center(
+      //   child: Column(
+      //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      //     children: [
+      //       Text('You have opened the app $appCounter times.'),
+      //       ElevatedButton(
+      //         onPressed: () {
+      //           deletePreference();
+      //         },
+      //         child: const Text('Reset Counter'),
+      //       ),
+      //     ],
+      //   ),
+      // ),
+      appBar: AppBar(title: const Text('Path Provider')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text('You have opened the app $appCounter times.'),
-            ElevatedButton(
-              onPressed: () {
-                deletePreference();
-              },
-              child: const Text('Reset Counter'),
-            ),
+            Text('Document Path:\n$documentPath'),
+            const Divider(),
+            Text('Temporary Path:\n$tempPath'),
           ],
         ),
       ),

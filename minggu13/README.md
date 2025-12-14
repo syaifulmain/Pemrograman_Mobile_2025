@@ -458,18 +458,74 @@ deletePreference();
 
 # Praktikum 5: Akses filesystem dengan path_provider
 ### Langkah 1: Tambahkan Dependensi
+```bash
+flutter pub add path_provider
+```
 
 ### Langkah 2: Lakukan Import
+```dart
+import 'package:path_provider/path_provider.dart';
+```
 
 ### **Langkah 3: Tambahkan Variabel Path State**
 
+```dart
+String documentPath = '';
+String tempPath = '';
+```
+
 ### Langkah 4: Buat Method getPaths()
+```dart
+  Future getPaths() async {
+    final docDir = await getApplicationDocumentsDirectory();
+    final tempDir = await getTemporaryDirectory();
+    setState(() {
+      documentPath = docDir.path;
+      tempPath = tempDir.path;
+    });
+  }
+  ```
 
 ### Langkah 5: Panggil getPaths() di initState()
+```dart
+@override
+void initState() {
+  super.initState();
+  getPaths();
+}
+```
 
 ### **Langkah 6: Perbarui Tampilan**
+```dart
+Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Path Provider')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(
+              'Document Path:\n$documentPath',
+            ),
+            const Divider(),
+            Text(
+              'Temporary Path:\n$tempPath',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  ```
 
 ### **Langkah 7: Run**
+>Soal 7
+>
+> - Capture hasil praktikum Anda dan lampirkan di README.
+> - Lalu lakukan commit dengan pesan "W13: Jawaban Soal 7".
+
+![alt text](./images/m13p5.png)
 
 
 # Praktikum 6: Akses filesystem dengan direktori

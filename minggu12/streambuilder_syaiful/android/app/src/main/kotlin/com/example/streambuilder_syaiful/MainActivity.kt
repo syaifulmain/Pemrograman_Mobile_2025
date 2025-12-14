@@ -1,0 +1,5 @@
+package com.example.streambuilder_syaiful
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity : FlutterActivity()

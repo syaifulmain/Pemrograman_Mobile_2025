@@ -437,17 +437,63 @@ void addRandomNumber() {
 
 # Praktikum 5: Multiple stream subscriptions
 ### Langkah 1: Buka file **`main.dart`**
+```dart
+late StreamSubscription subscription2;
+String values = '';
+```
 
 ### Langkah 2: Edit **`initState()`**
+```dart
+subscription2 = stream.listen((event) {
+  setState(() {
+    values += '$event - ';
+  });
+});
+```
 
 ### **Langkah 3: Run**
+>Soal 10
+>
+> - Jelaskan mengapa error itu bisa terjadi ?
+>   - Exception `Bad state: Stream has already been listened to` muncul karena listener pertama `subscription` sudah mengikat stream, sehingga pembuatan listener kedua `subscription2` ditolak runtime agar tidak terjadi konflik.
+
+
 
 ### Langkah 4: Set broadcast stream
+```dart
+@override
+void initState() {
+  numberStream = NumberStream();
+  numberStreamController = numberStream.controller;
+  Stream stream = numberStreamController.stream.asBroadcastStream();
+  ...
+```
 
 ### Langkah 5: Edit method **`build()`**
+```dart
+children: [
+  Text(lastNumber.toString()),
+  ElevatedButton(
+    onPressed: () => addRandomNumber(),
+    child: const Text('New Random Number'),
+  ),
+  ElevatedButton(
+    onPressed: () => stopStream(),
+    child: const Text('Stop Subscription'),
+  ),
+  Text(values),
+],
+```
 
 ### **Langkah 6: Run**
+>Soal 11
+>
+> - Jelaskan mengapa hal itu bisa terjadi ?
+>   - Setelah `asBroadcastStream()` dijalankan, stream mengizinkan banyak subscriber sehingga setiap angka yang dikirim secara simultan diterima oleh kedua subscription. 
+> - Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
+> - Lalu lakukan commit dengan pesan "W12: Jawaban Soal 10,11".
 
+![alt text](./images/m12p5.gif)
 
 # Praktikum 6: StreamBuilder
 ### **Langkah 1: Buat Project Baru**

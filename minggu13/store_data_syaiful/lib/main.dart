@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:store_data_syaiful/model/pizza.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -161,6 +162,20 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  final pwdController = TextEditingController();
+  String myPass = '';
+
+  final storage = const FlutterSecureStorage();
+  final String myKey = "myPass";
+
+  Future<void> writeToSecureStorage() async {
+    await storage.write(key: myKey, value: pwdController.text);
+  }
+
+  Future<String> readFromSecureStorage() async {
+    return await storage.read(key: myKey) ?? "";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -196,22 +211,38 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           // children: [
           //   Text('Document Path:\n$documentPath'),
           //   const Divider(),
           //   Text('Temporary Path:\n$tempPath'),
           // ],
           children: [
-            Text('Document Path:\n$documentPath'),
-            const Divider(),
-            Text('Temporary Path:\n$tempPath'),
-            const Divider(),
+            // Text('Document Path:\n$documentPath'),
+            // const Divider(),
+            // Text('Temporary Path:\n$tempPath'),
+            // const Divider(),
+            // ElevatedButton(
+            //   onPressed: () => readFile(),
+            //   child: const Text('Read File'),
+            // ),
+            // Text(fileText),
+            TextField(controller: pwdController),
             ElevatedButton(
-              onPressed: () => readFile(),
-              child: const Text('Read File'),
+              child: const Text('Save Value'),
+              onPressed: () {
+                writeToSecureStorage();
+              },
             ),
-            Text(fileText),
+            ElevatedButton(
+              child: const Text('Read Value'),
+              onPressed: () async {
+                String value = await readFromSecureStorage();
+                setState(() {
+                  myPass = value;
+                });
+              },
+            ),
+            Text(myPass),
           ],
         ),
       ),

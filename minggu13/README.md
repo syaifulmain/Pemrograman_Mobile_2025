@@ -615,19 +615,72 @@ Text(
 
 # Praktikum 7: Menyimpan data dengan enkripsi/dekripsi
 ### Langkah 1: Tambahkan Dependensi
+```bash
+flutter pub add flutter_secure_storage
+```
 
 ### Langkah 2: Lakukan Import
+```dart
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+```
 
 ### Langkah 3: Tambahkan Variabel dan Controller
+```dart
+final pwdController = TextEditingController();
+String myPass = '';
+```
 
 ### Langkah 4: Inisialisasi Secure Storage
+```dart
+final storage = const FlutterSecureStorage();
+final String myKey = "myPass";
+```
 
 ### **Langkah 5: Buat Method writeToSecureStorage()**
+```dart
+Future<void> writeToSecureStorage() async {
+await storage.write(key: myKey, value: pwdController.text);
+}
+```
 
 ### Langkah 6: Buat Method readFromSecureStorage()
+```dart
+  Future<String> readFromSecureStorage() async {
+    return await storage.read(key: myKey) ?? "";
+  }
+```
 
 ### Langkah 7: Edit build() untuk UI dan Logic
+```dart
+// Di dalam body: Column children:
+TextField(
+  controller: pwdController,
+),
+ElevatedButton(child: const Text('Save Value'), onPressed: () {
+  writeToSecureStorage();
+}),
+// ...
+```
 
 ### Langkah 8: Hubungkan Read ke Tombol
+```dart
+ElevatedButton(
+    child: const Text('Read Value'),
+    onPressed: () async {
+    String value = await readFromSecureStorage();
+    setState(() {
+        myPass = value;
+    });
+    },
+),
+Text(myPass),
+```
 
 ### Langkah 9: Run
+
+> Soal 9
+>
+> - Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
+> - Lalu lakukan commit dengan pesan "W13: Jawaban Soal 9".
+
+![alt text](./images/m13p7.png)

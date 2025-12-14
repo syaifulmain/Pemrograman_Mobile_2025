@@ -354,13 +354,22 @@ Future handleError() async {
 
 ## Praktikum 6: Menggunakan Future dengan StatefulWidget
 ### Langkah 1: install plugin geolocator
+```bash
+flutter pub add geolocator
+```
 
 ### Langkah 2: Tambah permission GPS
+```xml
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
+```
 ### Langkah 3: Buat file `geolocation.dart`
-
+```file
+geolocation.dart
+```
 ### Langkah 4: Buat StatefulWidget
-
+`class LocationScreen`
 ### Langkah 5: Isi kode `geolocation.dart`
 
 ### Langkah 6: Edit main.dart

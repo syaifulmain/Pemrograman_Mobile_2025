@@ -499,18 +499,117 @@ children: [
 ### **Langkah 1: Buat Project Baru**
 
 ### Langkah 2: Buat file baru **`stream.dart`**
+```dart
+class NumberStream {}
+```
 
 ### Langkah 3: Tetap di file **`stream.dart`**
+```dart
+Stream<int> getNumbers() async* {
+  yield* Stream.periodic(const Duration(seconds: 1), (int t) {
+    Random random = Random();
+    int myNum = random.nextInt(10);
+    return myNum;
+  });
+}
+```
 
 ### **Langkah 4: Edit main.dart**
+```dart
+import 'package:flutter/material.dart';
+import 'stream.dart';
+import 'dart:async';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Stream',
+      theme: ThemeData(
+        primarySwatch: Colors.deepPurple,
+      ),
+      home: const StreamHomePage(),
+    );
+  }
+}
+
+class StreamHomePage extends StatefulWidget {
+  const StreamHomePage({super.key});
+
+  @override
+  State<StreamHomePage> createState() => _StreamHomePageState();
+}
+
+class _StreamHomePageState extends State<StreamHomePage> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+```
 
 ### Langkah 5: Tambah variabel
+```dart
+late Stream<int> numberStream;
+```
 
 ### Langkah 6: Edit **`initState()`**
+```dart
+@override
+void initState() {
+  numberStream = NumberStream().getNumbers();
+  super.initState();
+}
+```
 
 ### Langkah 7: Edit method **`build()`**
+```dart
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text('Stream'),
+    ),
+    body: StreamBuilder(
+      stream: numberStream,
+      initialData: 0,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          print('Error!');
+        }
+        if (snapshot.hasData) {
+          return Center(
+            child: Text(
+              snapshot.data.toString(),
+              style: const TextStyle(fontSize: 96),
+            ),
+          );
+        } else {
+          return const SizedBox.shrink();
+        }
+      },
+    ),
+  );
+}
+```
 
 ### **Langkah 8: Run**
+
+>Soal 12
+>
+> - Jelaskan maksud kode pada langkah 3 dan 7 !
+>   - Fungsi menghasilkan angka setiap detik
+>   - Menampilkan angka setiap ada event baru
+> - Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
+> - Lalu lakukan commit dengan pesan "W12: Jawaban Soal 12".
+
+![alt text](./images/m12p6.gif)
 
 
 # Praktikum 7: BLoC Pattern

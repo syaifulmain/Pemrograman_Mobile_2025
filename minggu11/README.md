@@ -522,19 +522,113 @@ else if (snapshot.connectionState == ConnectionState.done) {
 
 ## Praktikum 8: Navigation route dengan Future Function
 ### Langkah 1: Buat file baru `navigation_first.dart`
+```file
+navigation_first.dart
+```
 
 ### Langkah 2: Isi kode `navigation_first.dart`
+```dart
+import 'package:flutter/material.dart';
+
+class NavigationFirst extends StatefulWidget {
+  const NavigationFirst({super.key});
+
+  @override
+  State<NavigationFirst> createState() => _NavigationFirstState();
+}
+
+class _NavigationFirstState extends State<NavigationFirst> {
+  Color color = Colors.blue.shade700;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: color,
+      appBar: AppBar(title: const Text('Syaiful Navigation First Screen')),
+      body: Center(
+        child: ElevatedButton(onPressed: () {
+          _navigateAndGetColor(context);
+        }, child: const Text('Change Color')),
+      )
+    );
+  }
+}
+```
 
 ### Langkah 3: Tambah method di `class _NavigationFirstState`
+```dart
+Future _navigateAndGetColor(BuildContext context) async {
+  color = await Navigator.push(context,
+      MaterialPageRoute(builder: (context) => const NavigationSecond()),) ?? Colors.blue;
+  setState(() {});
+  });
+}
+```
 
 ### Langkah 4: Buat file baru `navigation_second.dart`
 
 ### Langkah 5: Buat class NavigationSecond dengan StatefulWidget
+```dart
+import 'package:flutter/material.dart';
+
+class NavigationSecond extends StatefulWidget {
+  const NavigationSecond({super.key});
+
+  @override
+  State<NavigationSecond> createState() => _NavigationSecondState();
+}
+
+class _NavigationSecondState extends State<NavigationSecond> {
+  @override
+  Widget build(BuildContext context) {
+    Color color;
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Navigation Second Page')
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context, Colors.red);
+              },
+              child: const Text('Red Color'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context, Colors.green);
+              },
+              child: const Text('Green Color'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context, Colors.blue);
+              },
+              child: const Text('Blue Color'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
 
 ### Langkah 6: Edit `main.dart`
+```dart
+home: const NavigationFirst()
+```
 
 ### Langkah 8: Run
+> Soal 16
+>
+> - Cobalah klik setiap button, apa yang terjadi ? Mengapa demikian ?
+>   - background halaman pertama berubah.
+> - Gantilah 3 warna pada langkah 5 dengan warna favorit Anda!
+> - Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan "W11: Soal 16".
 
+![alt text](./images/p8m11.gif)
 
 ## Praktikum 9: Memanfaatkan async/await dengan Widget Dialog
 ### Langkah 1: Buat file baru `navigation_dialog.dart`

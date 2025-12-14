@@ -141,35 +141,131 @@ body: Text(pizzaString),
 ### **Langkah** 11: Buat file baru **`pizza.dart`**
 
 ### **Langkah 12: Model pizza.dart**
+```dart
+class Pizza {
+  final int id;
+  final String pizzaName;
+  final String description;
+  final double price;
+  final String imageUrl;
+}
+```
 
 ### Langkah 13: Buat `constructor()`
+```dart
+  factory Pizza.fromJson(Map<String, dynamic> json) {
+    return Pizza(
+      id: json['id'] ?? 0,
+      pizzaName: json['pizzaName'] ?? '',
+      description: json['description'] ?? '',
+      price: (json['price'] as num?)?.toDouble() ?? 0.0,
+      imageUrl: json['imageUrl'] ?? '',
+    );
+  }
+```
 
 ### Langkah 14: Pindah ke **`class _MyHomePageState`**
+```dart
+  Future<List<Pizza>> readJsonFile() async {
+    String myString = await DefaultAssetBundle.of(context)
+        .loadString('assets/pizzalist.json');
+    List pizzaMapList = jsonDecode(myString);
+```
 
 ### **Langkah 15: Pastikan impor class**
+```dart
+import 'dart:convert';
+import 'package:store_data_syaiful/model/pizza.dart';
+```
 
 ### Langkah **16: Konversi List Map ke List Objek Dart**
+```dart
+    List<Pizza> myPizzas = [];
+    for (var pizza in pizzaMapList) {
+      Pizza myPizza = Pizza.fromJson(pizza);
+      myPizzas.add(myPizza);
+    }
+```
 
 ### **Langkah** **17: return myPizzas**
+```dart
+    return myPizzas;
+```
 
 ### **Langkah** **18: Perbarui Signature Method**
+```dart
+Future<List<Pizza>> readJsonFile() async {
+```
 
 ### **Langkah** **19: Deklarasikan Variabel State**
+```dart
+List<Pizza> myPizzas = [];
+```
 
 ### **Langkah** **20: Panggil di initState dan Perbarui State**
+```dart
+  @override
+  void initState() {
+    super.initState();
+    readJsonFile().then((value) {
+      setState(() {
+        myPizzas = value;
+      });
+    });
+  }
+```
 
 ### **Langkah** **21: Tampilkan Data di ListView**
+```dart
+body: ListView.builder(
+  itemCount: myPizzas.length,
+  itemBuilder: (context, index) {
+    return ListTile(
+      title: Text(myPizzas[index].pizzaName),
+      subtitle: Text(myPizzas[index].description),
+    );
+  },
+ ));
+}
+```
 
 ### **Langkah** **22: Run**
 
+>Soal 3
+>
+> - Masukkan hasil capture layar ke laporan praktikum Anda.
+> - Lakukan commit hasil jawaban Soal 2 dengan pesan "W13: Jawaban Soal 3"
+
+![alt text](./images/m13p12.png)
+
 ### **Langkah** **23: Tambahkan Method toJson() (Serialization)**
+```dart
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'pizzaName': pizzaName,
+      'description': description,
+      'price': price,
+      'imageUrl': imageUrl,
+    };
+  }
+```
 
 ### **Langkah** **24: Buat Fungsi Konversi JSON String**
+```dart
+String convertToJSON(List<Pizza> pizzas) {
+    return jsonEncode(pizzas.map((pizza) => pizza.toJson()).toList());
+}
+```
 
 ### **Langkah** **25: Tampilkan Output JSON di Konsol**
+```dart
+String json = convertToJSON(myPizzas);
+print(json);
+```
 
 ### **Langkah** **26: Cek Output Konsol**
-
+![alt text](./images/m13p13.png)
 
 # Praktikum 2: Handle kompatibilitas data JSON
 ### Langkah 1: Simulasikan Error

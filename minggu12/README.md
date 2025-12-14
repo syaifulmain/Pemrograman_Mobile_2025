@@ -616,25 +616,131 @@ Widget build(BuildContext context) {
 ### Langkah 1: Buat Project baru
 
 ### Langkah 2: Isi kode **`random_bloc.dart`**
+```dart
+import 'dart:async';
+import 'dart:math';
+```
 
 ### Langkah 3: Buat **`class RandomNumberBloc()`**
+```dart
+class RandomNumberBloc {}
+```
 
 ### Langkah 4: Buat variabel **`StreamController`**
+```dart
+// StreamController for input events
+final _generateRandomController = StreamController<void>();
+// StreamController for output
+final _randomNumberController = StreamController<int>();
+// Input Sink
+Sink<void> get generateRandom => _generateRandomController.sink;
+// Output Stream
+Stream<int> get randomNumber => _randomNumberController.stream;
+```
 
 ### **Langkah 5: Buat constructor**
+```dart
+RandomNumberBloc() {
+  _generateRandomController.stream.listen((_) {
+    final random = Random().nextInt(10);
+    _randomNumberController.sink.add(random);
+  });
+}
+```
 
 ### Langkah 6: Buat method **`dispose()`**
+```dart
+void dispose() {
+  _generateRandomController.close();
+  _randomNumberController.close();
+}
+```
 
 ### Langkah 7: Edit **`main.dart`**
+```dart
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const RandomScreen(),
+    );
+  }
+}
+```
 
 ### Langkah 8: Buat file baru **`random_screen.dart`**
 
 ### Langkah 9: Lakukan impor material dan **`random_bloc.dart`**
+```dart
+import 'package:bloc_random_syaiful/random_bloc.dart';
+import 'package:flutter/material.dart';
+```
 
 ### **Langkah 10: Buat StatefulWidget RandomScreen**
 
 ### **Langkah 11: Buat variabel**
+```dart
+final _bloc = RandomNumberBloc();
+```
 
 ### Langkah 12: Buat method **`dispose()`**
+```dart
+@override
+void dispose() {
+  _bloc.dispose();
+  super.dispose();
+}
+```
 
 ### Langkah 13: Edit method **`build()`**
+```dart
+@override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Random Number')),
+      body: Center(
+        child: StreamBuilder<int>(
+          stream: _bloc.randomNumber,
+          initialData: 0,
+          builder: (context, snapshot) {
+            return Text(
+              'Random Number: ${snapshot.data}',
+              style: const TextStyle(fontSize: 24),
+            );
+          },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _bloc.generateRandom.add(null),
+        child: const Icon(Icons.refresh),
+      ),
+    );
+  }
+```
+
+>Soal 13
+>
+> - Jelaskan maksud praktikum ini ! Dimanakah letak konsep pola BLoC-nya ?
+>   - Input (Sink) - generateRandom
+>     - Menerima event dari UI (tombol ditekan)
+>     - Bersifat write-only untuk UI
+>   - Output (Stream) - randomNumber
+>     - Mengirim data ke UI
+>     - Bersifat read-only dari UI
+>   - Business Logic - Constructor
+>     - Memproses event input
+>     - Generate random number
+>     - Mengirim hasil ke output stream
+>   - UI Layer - StreamBuilder
+>     - Hanya menampilkan data dari BLoC
+>     - Tidak mengandung logika bisnis
+> - Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
+> - Lalu lakukan commit dengan pesan "W12: Jawaban Soal 13".
+
+![alt text](./images/m12p7.gif)

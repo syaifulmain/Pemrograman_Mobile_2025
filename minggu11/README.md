@@ -1,4 +1,3 @@
-
 ## Praktikum 1: Mengunduh Data dari Web Service (API)
 ### Langkah 1: Buat Project Baru
 create new project
@@ -368,27 +367,157 @@ flutter pub add geolocator
 ```file
 geolocation.dart
 ```
+
 ### Langkah 4: Buat StatefulWidget
 `class LocationScreen`
+
 ### Langkah 5: Isi kode `geolocation.dart`
+```dart
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+
+class LocationScreen extends StatefulWidget {
+  const LocationScreen({super.key});
+
+  @override
+  State<LocationScreen> createState() => _LocationScreenState();
+}
+
+class _LocationScreenState extends State<LocationScreen> {
+  String myPosition = 'Unknown';
+
+  Future<Position> getPosition() async {
+    await Geolocator.requestPermission();
+    await Geolocator.isLocationServiceEnabled();
+    Position? position = await Geolocator.getCurrentPosition();
+    return position;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getPosition().then((position) {
+      setState(() {
+        myPosition =
+            'Latitude: ${position.latitude}, Longitude: ${position.longitude}';
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Syaiful Geolocation Example')),
+      body: Center(child: Text(myPosition)),
+    );
+  }
+}
+```
+> Soal 11
+>
+> - Tambahkan nama panggilan Anda pada tiap properti title sebagai identitas pekerjaan Anda.
+>   - appBar: AppBar(title: const Text('Syaiful Geolocation Example')),
+
 
 ### Langkah 6: Edit main.dart
+```dart
+home: const LocationScreen()
+```
 
 ### Langkah 7: Run
+![alt text](./images/p6m11.png)
 
 ### Langkah 8: Tambahkan animasi loading
+```dart
+@override
+Widget build(BuildContext context) {
+  final myWidget = myPosition == 'Unknown'
+        ? const CircularProgressIndicator()
+        : Text(myPosition);
+
+  return Scaffold(
+    appBar: AppBar(title: const Text('Syaiful Geolocation Example')),
+    body: Center(child: myWidget),
+  );
+}
+```
+> Soal 12
+>
+> - Jika Anda tidak melihat animasi loading tampil, kemungkinan itu berjalan sangat cepat. Tambahkan delay pada method getPosition() dengan kode await Future.delayed(const Duration(seconds: 3));
+> - Apakah Anda mendapatkan koordinat GPS ketika run di browser? Mengapa demikian?
+> - Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan "W11: Soal 12".
+
+![alt text](./images/p62m11.gif)
 
 
 ## Praktikum 7: Manajemen Future dengan FutureBuilder
 ### Langkah 1: Modifikasi method `getPosition()`
+```dart
+Future<Position> getPosition() async {
+  await Geolocator.requestPermission();
+  await Geolocator.isLocationServiceEnabled();
+  await Future.delayed(const Duration(seconds: 3));
+  Position? position = await Geolocator.getCurrentPosition();
+  return position;
+}
+```
 
 ### Langkah 2: Tambah variabel
+```dart
+Future<Position>? position;
+```
 
 ### Langkah 3: Tambah `initState()`
-
+```dart
+@override
+void initState() {
+  super.initState();
+  position = getPosition();
+}
+```
 ### Langkah 4: Edit method `build()`
+```dart
+return Scaffold(
+  appBar: AppBar(title: const Text('Syaiful Geolocation Example')),
+  body: Center(
+    child: FutureBuilder(
+      future: position,
+      builder: (BuildContext context, AsyncSnapshot<Position> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else if (snapshot.connectionState == ConnectionState.done) {
+          return Text(snapshot.data.toString());
+        } else {
+          return const Text('');
+        }
+      },
+    ),
+  ),
+);
+```
+> Soal 13
+>
+> - Apakah ada perbedaan UI dengan praktikum sebelumnya? Mengapa demikian?
+>   - Tidak ada, karena hanya merubah cara menerima data.
+> - Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan "W11: Soal 13".
+> - Seperti yang Anda lihat, menggunakan FutureBuilder lebih efisien, clean, dan reactive dengan Future bersama UI.
+
+![alt text](./images/p7m11.png)
 
 ### Langkah 5: Tambah handling error
+```dart
+else if (snapshot.connectionState == ConnectionState.done) {
+  if (snapshot.hasError) {
+    return Text('Something terrible happened!');
+  }
+  return Text(snapshot.data.toString());
+}
+```
+> Soal 14
+>
+> - Apakah ada perbedaan UI dengan langkah sebelumnya? Mengapa demikian?
+>   - menambahkan handle jika terjadi error
+> - Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan "W11: Soal 14".
 
 
 ## Praktikum 8: Navigation route dengan Future Function

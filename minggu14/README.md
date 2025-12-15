@@ -344,4 +344,44 @@ floatingActionButton: FloatingActionButton(
 
 ![alt text](./images/m14p4.png)
 
-# 
+# Praktikum 4: Menghapus Data dari Web Service (DELETE)
+### Membuat Mock DELETE
+![alt text](./images/m14p5.png)
+
+### Membuat method delete
+```dart
+Future<String> deletePizza(int id) async {
+  const deletePath = '/pizza';
+  Uri url = Uri.https(authority, deletePath);
+  http.Response r = await http.delete(
+    url,
+  );
+  return r.body;
+}
+```
+
+### Di file main.dart, di metode build dari kelas _MyHomePageState, refactor itemBuilder dari ListView.builder sehingga ListTile terkandung dalam widget Dismissible, sebagai berikut:
+```dart
+return ListView.builder(
+    itemCount: (pizzas.data == null) ? 0 : pizzas.data.length,
+    itemBuilder: (BuildContext context, int position) {
+        return Dismissible(
+                    key: Key(position.toString()),
+                    onDismissed: (item) {
+                      HttpHelper helper = HttpHelper();
+                      pizzas.data!.removeWhere(
+                          (element) => element.id == pizzas.data![position].id);
+                      helper.deletePizza(pizzas.data![position].id!);
+                    },
+                    child: ListTile(...
+```
+
+### Run
+>Soal 4
+>
+> - Capture hasil aplikasi Anda berupa GIF di README dan lakukan commit hasil jawaban Soal 4 dengan pesan "W14: Jawaban Soal 4"
+
+![alt text](./images/m14p52.png)
+
+![alt text](./images/m14p53.png)
+

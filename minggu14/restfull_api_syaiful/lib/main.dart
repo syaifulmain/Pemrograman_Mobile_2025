@@ -59,29 +59,48 @@ class _MyHomePageState extends State<MyHomePage> {
           if (!pizzas.hasData) {
             return const CircularProgressIndicator();
           }
+          // ...existing code...
           return ListView.builder(
             itemCount: (pizzas.data == null) ? 0 : pizzas.data!.length,
             itemBuilder: (BuildContext context, int position) {
-              Pizza pizza = pizzas.data![position];
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(pizza.imageUrl),
-                ),
-                title: Text(pizza.pizzaName),
-                subtitle: Text(pizza.description),
-                trailing: Text('\$${pizza.price.toStringAsFixed(2)}'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          PizzaDetailScreen(pizza: pizza, isNew: false),
-                    ),
+              final pizza = pizzas.data![position];
+              return Dismissible(
+                key: Key('pizza_${pizza.id ?? position}'),
+                background: Container(color: Colors.redAccent),
+                onDismissed: (direction) async {
+                  final id = pizza.id;
+                  setState(() {
+                    pizzas.data!.removeWhere((element) => element.id == id);
+                  });
+                  if (id != null) {
+                    HttpHelper helper = HttpHelper();
+                    await helper.deletePizza(id);
+                  }
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('${pizza.pizzaName} deleted')),
                   );
                 },
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(pizza.imageUrl),
+                  ),
+                  title: Text(pizza.pizzaName),
+                  subtitle: Text(pizza.description),
+                  trailing: Text('\$${pizza.price.toStringAsFixed(2)}'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            PizzaDetailScreen(pizza: pizza, isNew: false),
+                      ),
+                    );
+                  },
+                ),
               );
             },
           );
+          // ...existing code...
         },
       ),
     );

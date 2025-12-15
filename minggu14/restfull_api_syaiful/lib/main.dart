@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:restfull_api_syaiful/httphelper.dart';
 import 'package:restfull_api_syaiful/model/pizza.dart';
+import 'package:restfull_api_syaiful/pizza_detail.dart';
 
 void main() {
   runApp(const MyApp());
@@ -37,25 +38,47 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('JSON - Syaiful')),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  PizzaDetailScreen(pizza: Pizza(), isNew: true),
+            ),
+          );
+        },
+      ),
       body: FutureBuilder(
         future: callPizzas(),
-        builder: (BuildContext context, AsyncSnapshot<List<Pizza>> snapshot) {
-          if (snapshot.hasError) {
+        builder: (BuildContext context, AsyncSnapshot<List<Pizza>> pizzas) {
+          if (pizzas.hasError) {
             return const Text('Something went wrong');
           }
-          if (!snapshot.hasData) {
+          if (!pizzas.hasData) {
             return const CircularProgressIndicator();
           }
           return ListView.builder(
-            itemCount: (snapshot.data == null) ? 0 : snapshot.data!.length,
+            itemCount: (pizzas.data == null) ? 0 : pizzas.data!.length,
             itemBuilder: (BuildContext context, int position) {
+              Pizza pizza = pizzas.data![position];
               return ListTile(
-                title: Text(snapshot.data![position].pizzaName),
-                subtitle: Text(
-                  snapshot.data![position].description +
-                      ' - € ' +
-                      snapshot.data![position].price.toString(),
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(pizza.imageUrl),
                 ),
+                title: Text(pizza.pizzaName),
+                subtitle: Text(pizza.description),
+                trailing: Text('\$${pizza.price.toStringAsFixed(2)}'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          PizzaDetailScreen(pizza: pizza, isNew: false),
+                    ),
+                  );
+                },
               );
             },
           );

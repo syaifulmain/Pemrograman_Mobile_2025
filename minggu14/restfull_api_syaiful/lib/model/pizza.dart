@@ -25,13 +25,12 @@ class Pizza {
       imageUrl: json[keyImageUrl] != null ? json[keyImageUrl].toString() : '',
     );
   }
-
   Pizza({
-    required this.id,
-    required this.pizzaName,
-    required this.description,
-    required this.price,
-    required this.imageUrl,
+    this.id = 0,
+    this.pizzaName = '',
+    this.description = '',
+    this.price = 0.0,
+    this.imageUrl = '',
   });
 
   Map<String, dynamic> toJson() {
